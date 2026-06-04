@@ -1,13 +1,22 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/wbreza/azure-dev/main/schemas/v1.0/azure.yaml.json
+trigger:
+- main
 
-name: eShopOnWeb
-services:
-  web:
-    project: ./src/Web
-    language: csharp
-    host: appservice
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '8.x'
+
+- script: |
+    dotnet restore
+    dotnet build
+  displayName: 'Build'
 
 - task: CavissonCodeAnalyzer@1
   inputs:
     cavissonAnalyzerServiceConnection: 'cav1'
-    project: 
+    project: 'eShopOnWeb'
